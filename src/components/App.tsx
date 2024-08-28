@@ -1,10 +1,10 @@
 import ItemContextProvider from '../contexts/ItemsContextProvider';
-import MainContainer from './layout/main-container';
+import MainContent from './layout/main-content';
 
 function App() {
   return (
     <ItemContextProvider>
-      <MainContainer />
+      <MainContent />
     </ItemContextProvider>
   );
 }
