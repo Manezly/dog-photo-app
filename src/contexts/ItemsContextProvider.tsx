@@ -54,7 +54,7 @@ export default function ItemContextProvider({
         setError(err.message);
       }
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
