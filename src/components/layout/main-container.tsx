@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Button from './button';
+import ReplaceFavouriteDialog from './replace-favourite-dialog';
 
 function MainContainer() {
   const [dogPhoto, setDogPhoto] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false); // Toggles loading state
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); // Dialog for replacing favourite dog image
 
   const fetchDogPhoto = async () => {
     setLoading(true);
@@ -26,8 +31,34 @@ function MainContainer() {
       if (err instanceof Error) {
         setError(err.message);
       }
-    } finally {
-      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!dogPhoto && !loading) {
+      // Fetch image on mount and not loading
+      fetchDogPhoto();
+    }
+  }, []);
+
+  const addFavouritePhoto = () => {
+    if (dogPhoto) {
+      const existingFavourite = localStorage.getItem('favourite');
+
+      if (existingFavourite) {
+        setIsDialogOpen(true);
+      } else {
+        localStorage.setItem('favourite', dogPhoto);
+        toast.success('Dog photo added to favorites!');
+      }
+    }
+  };
+
+  const confirmReplaceFavorite = () => {
+    if (dogPhoto) {
+      localStorage.setItem('favourite', dogPhoto);
+      setIsDialogOpen(false);
+      toast.success('Dog photo replaced previous favourite!');
     }
   };
 
@@ -40,17 +71,21 @@ function MainContainer() {
           </header>
 
           <section>
-            <button
-              onClick={fetchDogPhoto}
-              className={`${
-                loading ? 'bg-black/70' : ''
-              } px-4 py-2 text-white bg-black rounded-t-lg hover:bg-black/70`}
-              disabled={loading}
-            >
-              Generate Dog Photo
-            </button>
+            <Button
+              onClickFunction={fetchDogPhoto}
+              loading={loading}
+              buttonText='Click to Generate Dog Photo'
+            />
 
-            <div className='relative'>
+            <Button
+              onClickFunction={addFavouritePhoto}
+              loading={loading}
+              buttonText='Add Photo to Favourites'
+            />
+          </section>
+
+          <section>
+            <div className='relative h-auto'>
               {loading && (
                 <div className='flex justify-center items-center absolute w-full h-full bg-black/80'>
                   <div className='animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500'></div>
@@ -62,12 +97,22 @@ function MainContainer() {
                   src={dogPhoto}
                   alt='Random Dog'
                   className={`w-full h-auto object-cover`}
+                  onLoad={() => setLoading(false)} // Loading state false only when image rendered
                 />
               )}
             </div>
           </section>
         </div>
       </div>
+
+      <ToastContainer />
+
+      {isDialogOpen && (
+        <ReplaceFavouriteDialog
+          confirmReplaceFavorite={confirmReplaceFavorite}
+          setIsDialogOpen={setIsDialogOpen}
+        />
+      )}
     </main>
   );
 }
