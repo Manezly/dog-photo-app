@@ -1,8 +1,18 @@
 import { useItemContext } from '../../lib/hooks';
 
 function ImageContainer() {
-  const { loading, dogPhoto, generateDogImageTab, favouritePhoto, setLoading } =
-    useItemContext();
+  const {
+    loading,
+    dogPhoto,
+    generateDogImageTab,
+    favouritePhoto,
+    setLoading,
+    error,
+  } = useItemContext();
+
+  if (error) {
+    return <div>Error generating image!</div>;
+  }
   return (
     <section>
       <div className='relative h-auto'>
