@@ -2,16 +2,25 @@ type ButtonProps = {
   onClickFunction: () => void;
   loading: boolean;
   buttonText: string;
+  generateDogImageTab: boolean;
+  buttonStyling?: string;
 };
 
-function Button({ onClickFunction, loading, buttonText }: ButtonProps) {
+function Button({
+  onClickFunction,
+  loading,
+  buttonText,
+  generateDogImageTab,
+  buttonStyling,
+}: ButtonProps) {
+  const isDisabled = loading || generateDogImageTab;
   return (
     <button
       onClick={onClickFunction}
-      className={`${
-        loading ? 'bg-black/70' : ''
-      } px-4 py-2 text-white bg-black rounded-t-lg hover:bg-black/70`}
-      disabled={loading}
+      className={`px-4 py-2 text-white ${
+        isDisabled ? 'bg-black/60' : 'bg-black hover:bg-red-500'
+      } ${buttonStyling}`}
+      disabled={isDisabled}
     >
       {buttonText}
     </button>

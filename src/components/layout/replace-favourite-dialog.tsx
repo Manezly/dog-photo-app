@@ -1,12 +1,7 @@
-type ReplaceFavouriteDialogProps = {
-  confirmReplaceFavorite: () => void;
-  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { useItemContext } from '../../lib/hooks';
 
-function ReplaceFavouriteDialog({
-  confirmReplaceFavorite,
-  setIsDialogOpen,
-}: ReplaceFavouriteDialogProps) {
+function ReplaceFavouriteDialog() {
+  const { confirmReplaceFavorite, setIsDialogOpen } = useItemContext();
   return (
     <div className='fixed inset-0 bg-black/50 flex justify-center items-center'>
       <div className='bg-white p-4 rounded shadow-lg'>
